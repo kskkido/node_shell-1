@@ -3,13 +3,13 @@ var commands = require('./commands');
 process.stdout.write('prompt > ');
 
 process.stdin.on('data', function (data) {
-	var cmd = data.toString().trim();
-	if (cmd.slice(0, 4) === "echo") {
-		var echo = cmd.slice(0, 4);
-		var str = cmd.slice(5);
-		commands[echo](str);
+	var cmd = data.toString().trim().split(" ");
+	if (cmd.length > 1) {
+		var command = cmd[0];
+		var arg = cmd.slice(1).join(" ");
+		commands[command](arg);
 	}
 	else {
-		commands[cmd]();
+		commands[cmd[0]]();
 	}
 })

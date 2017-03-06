@@ -29,9 +29,27 @@ module.exports = {
 	echo: function(str) {
 		process.stdout.write(str);
   		process.stdout.write('\nprompt > ');
-	}
+	},
 	cat: function(file) {
-		
+		fs.readFile(file, function(err, data) {
+			if (err) throw err;
+			process.stdout.write(data.toString());
+			process.stdout.write('\nprompt > ')
+		})
+	},
+	head: function(file) {
+		fs.readFile(file, function(err, data) {
+			if (err) throw err;
+			process.stdout.write(data.toString().split("\n").slice(0,5).join("\n"));
+			process.stdout.write('\nprompt > ')
+		})
+	},
+	tail: function(file) {
+		fs.readFile(file, function(err, data) {
+			if (err) throw err;
+			process.stdout.write(data.toString().split("\n").slice(-6).join("\n"));
+			process.stdout.write('\nprompt > ')
+		})
 	}
 }
 
