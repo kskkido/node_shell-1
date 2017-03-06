@@ -1,4 +1,5 @@
 var fs = require('fs');
+var request = require('request');
 
 module.exports = {
 
@@ -6,50 +7,53 @@ module.exports = {
 
 
 	// The stdin 'data' event fires after a user types in a line
-	pwd: function(file) {
-	  	process.stdout.write(process.env.PWD);
-	  	process.stdout.write('\nprompt > ')
+	pwd: function(file, func) {
+		func(process.env.PWD)
 	},
 
-	date: function(file) {
+	date: function(file, func) {
 	  	var nowDate = new Date();
-	  	process.stdout.write(nowDate.toString());
-  		process.stdout.write('\nprompt > ');
+	  	func(nowDate.toString());
 	},
-	ls: function(file) {
+	ls: function(file, func) {
 		fs.readdir('.', function(err, files) {
 	  		if(err) throw err;
+	  		var concatFile = '';
 	  		files.forEach(function(file) {
-	  			process.stdout.write(file.toString()+'\n');
-
+	  			concatFile += file.toString()+'\n';
 	  		})
-	  		process.stdout.write('\nprompt > ');
+
+	  		func(concatFile);
 	  	})
 	},
-	echo: function(str) {
-		process.stdout.write(str);
-  		process.stdout.write('\nprompt > ');
+	echo: function(str, func) {
+		func(str);
 	},
-	cat: function(file) {
+	cat: function(file, func) {
 		fs.readFile(file, function(err, data) {
 			if (err) throw err;
-			process.stdout.write(data.toString());
-			process.stdout.write('\nprompt > ')
+			func(data.toString());
 		})
 	},
-	head: function(file) {
+	head: function(file, func) {
 		fs.readFile(file, function(err, data) {
 			if (err) throw err;
-			process.stdout.write(data.toString().split("\n").slice(0,5).join("\n"));
-			process.stdout.write('\nprompt > ')
+			func(data.toString().split("\n").slice(0,5).join("\n"));
 		})
 	},
-	tail: function(file) {
+	tail: function(file, func) {
 		fs.readFile(file, function(err, data) {
 			if (err) throw err;
-			process.stdout.write(data.toString().split("\n").slice(-6).join("\n"));
-			process.stdout.write('\nprompt > ')
+			func(data.toString().split("\n").slice(-6).join("\n"));
 		})
-	}
+	},
+	curl: function(url, func) {
+		url = 'http://www.' + url;
+		request(url, function(err, response, body) {
+			if(err) throw err;
+
+			func(body);
+		})
+	} 
 }
 

@@ -7,9 +7,15 @@ process.stdin.on('data', function (data) {
 	if (cmd.length > 1) {
 		var command = cmd[0];
 		var arg = cmd.slice(1).join(" ");
-		commands[command](arg);
+		commands[command](arg, done);
 	}
 	else {
-		commands[cmd[0]]();
+		commands[cmd[0]](null, done);
 	}
 })
+
+
+function done(output) {
+	process.stdout.write(output);
+	process.stdout.write('\nprompt > ')
+}
