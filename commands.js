@@ -54,6 +54,29 @@ module.exports = {
 
 			func(body);
 		})
-	} 
+	},
+
+	wc: function(file, func) {
+		func(file.split('\n').length);
+	},
+
+	sort: function(file, func) {
+		fs.readFile(file, function(err, data) {
+			if (err) throw err;
+			var arr = data.toString().split('\n').sort()
+			func(arr.join('\n'));
+		})
+	},
+
+	uniq: function(file, func) {
+		fs.readFile(file, function(err, data) {
+			if (err) throw err;
+			var arr = data.toString().split('\n').sort()
+			arr.filter(function(newLine, i, arr) {
+				return newLine !== arr[i+1] 
+			})
+			func(arr.join('\n'));
+		})
+	}
 }
 
